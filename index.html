@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Flower Bank App</title>
+</head>
+<body>
+    <header>
+        <h1 class="lg:text-5xl text-3xl text-center text-lime-400 font-bold mt-6">Flower Bank Ltd.</h1>
+    </header>
+
+    <main class=" container w-3/4 mx-auto">
+        <section mt-12>
+            <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 text-white">
+                <div class="bg-yellow-500 p-6 rounded mt-12 shadow-lg">
+                    <h3 class="text-2xl font-semibold">Deposit</h3>
+                    <h4 class="text-3xl font-semibold">$ <span id="deposit">00</span></h4>
+                </div>
+                <div class="bg-orange-500 p-6 rounded mt-12 shadow-lg">
+                    <h3 class="text-2xl font-semibold">Withdraw</h3>
+                    <h4 class="text-3xl font-semibold">$ <span id="withdraw">00</span></h4>
+                </div>
+                <div class="bg-green-500 p-6 rounded mt-12 shadow-lg">
+                    <h3 class="text-2xl font-semibold">Balance</h3>
+                    <h4 class="text-3xl font-semibold">$ <span id="balance">00</span></h4>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-12">
+            <div class="grid lg:grid-cols-2 grid-cols-1 gap-6">
+                <div class="text-center w-80 bg-gray-100 hover:shadow-md transition px-4 py-2 rounded-md mx-auto">
+                    <h3 class="text-2xl font-bold text-teal-500">Deposit Money</h3>
+                    <div class="mt-2">
+                        <input type="number" id="deposit-input" class="border-2 border-gray-400 rounded block w-full px-2 py-1 outline-0" placeholder="Deposit Your Money">
+                        <button id="deposit-button" class="w-1/2 px-4 py-1 bg-blue-400 mt-2 rounded text-white font-semibold">Deposit</button>
+                    </div>
+                </div>
+                <div class="text-center w-80 bg-gray-100 hover:shadow-md transition px-4 py-2 rounded-md mx-auto">
+                    <h3 class="text-2xl font-bold text-teal-500">Withdraw Money</h3>
+                    <div class="mt-2">
+                        <input type="number" id="deposit-withdraw" class="border-2 border-gray-400 rounded block w-full px-2 py-1 outline-0" placeholder="Withdraw Your Money">
+                        <button id="withdraw-button" class="w-1/2 px-4 py-1 bg-blue-400 mt-2 rounded text-white font-semibold">Withdraw</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+       <div class="text-center py-16 mx-auto w-full">
+         <h3 class="text-2xl text-white font-semibold border border-gray-400 bg-red-500">Transaction History</h3>
+         <ul id="transaction-list" class="text-xl text-start text-gray-700 divide-y divide-gray-400 border border-gray-400 bg-orange-200"></ul>
+       </div>
+    </main>
+
+
+<script>
+    const depositInput = document.querySelector("#deposit-input");
+    const depositWithdraw = document.querySelector("#deposit-withdraw");
+
+    const depositeButton = document.querySelector("#deposit-button");
+    const withdrawButton = document.querySelector("#withdraw-button");
+
+    const deposit = document.querySelector("#deposit");
+    const withdraw = document.querySelector("#withdraw");
+    const balance = document.querySelector("#balance");
+
+    const transactionList = document.querySelector("#transaction-list");
+
+    
+    depositeButton.addEventListener('click',()=>{
+        if(depositInput.value === ""){
+            alert("Please enter a valid amount.");
+            return false;
+        };
+        const depositAmount = parseFloat(depositInput.value);
+        if(parseFloat(depositAmount) < 0){
+            throw new Error("Negative number not allowed");
+        } else if(parseFloat(depositAmount) === 0){
+            alert("Please enter a valid amount.");
+        } else{
+        const currentDepositAmount = parseFloat(deposit.textContent);
+        const updateDeposit = parseFloat(currentDepositAmount + depositAmount);
+        deposit.textContent = updateDeposit.toFixed(2);
+
+        const currentBalanceTotal = parseFloat(balance.textContent);
+        const updateBalance = parseFloat(currentBalanceTotal + depositAmount);
+        balance.textContent = updateBalance.toFixed(2);
+        depositInput.value = "";
+
+        const depositList = document.createElement("li");
+        depositList.textContent = `Deposit Amount:  $${depositAmount.toFixed(2)} - ${new Date().toLocaleString()} - Remaing Balance: $${updateBalance.toFixed(2)}`;
+        transactionList.appendChild(depositList);
+        };            
+    });
+    
+    withdrawButton.addEventListener('click',()=>{
+        if(depositWithdraw.value === ""){
+            alert("Enter a valid amount or check balance!");
+            return false;
+        };
+        const withdrawAmount = parseFloat(depositWithdraw.value);
+        if(parseFloat(withdrawAmount) < 0){
+            throw new Error("Negative number not allowed.");
+        }else if(parseFloat(withdrawAmount) === 0){
+            alert("Enter a valid amount or check balance!");
+        }else if(parseFloat(withdrawAmount) > parseFloat(balance.textContent)){
+            alert("Enter a valid amount or check balance!");
+        } else {
+        const currentWithdrawAmount = parseFloat(withdraw.textContent);
+        const updateWithdraw = parseFloat(currentWithdrawAmount + withdrawAmount);     
+        withdraw.textContent = updateWithdraw.toFixed(2);
+
+        const currentBalanceWithdraw = parseFloat(balance.textContent);
+        const withdrawBalance = parseFloat(currentBalanceWithdraw - withdrawAmount);
+        balance.textContent = withdrawBalance.toFixed(2);
+        depositWithdraw.value = "";
+
+        const withdrawList = document.createElement("li");
+        withdrawList.textContent = `Withdraw Amount:  $${withdrawAmount.toFixed(2)} - ${new Date().toLocaleString()} - Remaing Balance: $${withdrawBalance.toFixed(2)}`;
+        transactionList.appendChild(withdrawList);
+        };    
+    });
+
+</script>
+
+
+</body>
+</html>
